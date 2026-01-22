@@ -8,12 +8,12 @@ const [, , source, dest] = process.argv;
 
 if (!source) {
   console.error('Please provide source path');
-  process.exit(0);
+  process.exit(1);
 }
 
 if (!dest) {
   console.error('Please provide destination path');
-  process.exit(0);
+  process.exit(1);
 }
 
 if (source === dest) {
@@ -38,6 +38,7 @@ if (source === dest) {
         console.error('Destination directory does not exist');
         process.exit(1);
       }
+
       target = path.join(dest, path.basename(source));
     } else {
       try {
@@ -48,9 +49,15 @@ if (source === dest) {
         }
       } catch {
         const parentDir = path.dirname(dest);
-        const parentStat = await fs.stat(parentDir);
 
-        if (!parentStat.isDirectory()) {
+        try {
+          const parentStat = await fs.stat(parentDir);
+
+          if (!parentStat.isDirectory()) {
+            console.error('Destination directory does not exist');
+            process.exit(1);
+          }
+        } catch {
           console.error('Destination directory does not exist');
           process.exit(1);
         }
@@ -61,6 +68,6 @@ if (source === dest) {
     console.log(`File moved from "${source}" to "${target}"`);
   } catch (err) {
     console.error(err.message);
-    process.exit(0);
+    process.exit(1);
   }
 })();
