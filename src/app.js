@@ -8,6 +8,7 @@ const [, , source, dest] = process.argv;
 
 if (!source) {
   console.error('Please provide source path');
+  process.exit(0);
 }
 
 if (!dest) {
@@ -25,6 +26,7 @@ if (source === dest) {
 
     if (!srcStat.isFile()) {
       console.error('Source is not a file');
+      process.exit(1);
     }
 
     let target = dest;
@@ -34,6 +36,7 @@ if (source === dest) {
 
       if (!dirStat.isDirectory()) {
         console.error('Destination directory does not exist');
+        process.exit(1);
       }
       target = path.join(dest, path.basename(source));
     } else {
@@ -49,6 +52,7 @@ if (source === dest) {
 
         if (!parentStat.isDirectory()) {
           console.error('Destination directory does not exist');
+          process.exit(1);
         }
       }
     }
